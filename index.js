@@ -8,9 +8,9 @@ const app = express();
 const port = 3000;
 
 app.use(bodyParser.json());
-app.use('/products', productRoutes);
-app.use('/users', userRoutes);
-app.use('/reviews', reviewRoutes);
+app.use('/api/products', productRoutes);
+app.use('/api/users', userRoutes);
+app.use('/api/reviews', reviewRoutes);
 
 app.listen(port, () => {
   console.log(`Server listening at http://localhost:${port}`)
