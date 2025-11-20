@@ -1,10 +1,9 @@
 import express from 'express';
-import * as reviewController from '../controllers/reviewController.js';
-import authMiddleware from '../middleware/authMiddleware.js';
+import reviewController from '../controllers/reviewController.js';
+import { protect } from '../middleware/authMiddleware.js';
 
-const router = express.Router();
+const router = express.Router({ mergeParams: true });
 
-router.post('/', authMiddleware, reviewController.createReview);
-router.get('/product/:productId', reviewController.getProductReviews);
+router.route('/').post(protect, reviewController.createProductReview).get(reviewController.getProductReviews);
 
 export default router;

@@ -1,56 +1,29 @@
 import db from '../config/db.js';
 
 const Product = {
-  create: (product) => {
-    return new Promise((resolve, reject) => {
-      db.query('INSERT INTO products SET ?', product, (err, result) => {
-        if (err) {
-          return reject(err);
-        }
-        resolve(result.insertId);
-      });
-    });
+  create: async (product) => {
+    const [result] = await db.execute(
+      'INSERT INTO products (name, description, price, category, stock, user_id) VALUES (?, ?, ?, ?, ?, ?)',
+      [product.name, product.description, product.price, product.category, product.stock, product.user_id]
+    );
+    return result.insertId;
   },
-  getAll: () => {
-    return new Promise((resolve, reject) => {
-      db.query('SELECT * FROM products', (err, results) => {
-        if (err) {
-          return reject(err);
-        }
-        resolve(results);
-      });
-    });
+  getAll: async () => {
+    const [rows] = await db.execute('SELECT * FROM products');
+    return rows;
   },
-  findById: (id) => {
-    return new Promise((resolve, reject) => {
-      db.query('SELECT * FROM products WHERE id = ?', [id], (err, result) => {
-        if (err) {
-          return reject(err);
-        }
-        resolve(result[0]);
-      });
-    });
+  findById: async (id) => {
+    const [rows] = await db.execute('SELECT * FROM products WHERE id = ?', [id]);
+    return rows[0];
   },
-  update: (id, product) => {
-    return new Promise((resolve, reject) => {
-      db.query('UPDATE products SET ? WHERE id = ?', [product, id], (err, result) => {
-        if (err) {
-          return reject(err);
-        }
-        resolve(result.affectedRows);
-      });
-    });
+  update: async (id, product) => {
+    const [result] = await db.execute('UPDATE products SET ? WHERE id = ?', [product, id]);
+    return result.affectedRows;
   },
-  delete: (id) => {
-    return new Promise((resolve, reject) => {
-      db.query('DELETE FROM products WHERE id = ?', [id], (err, result) => {
-        if (err) {
-          return reject(err);
-        }
-        resolve(result.affectedRows);
-      });
-    });
-  },
+  delete: async (id) => {
+    const [result] = await db.execute('DELETE FROM products WHERE id = ?', [id]);
+    return result.affectedRows;
+  }
 };
 
 export default Product;

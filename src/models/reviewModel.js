@@ -1,26 +1,17 @@
 import db from '../config/db.js';
 
 const Review = {
-  create: (review) => {
-    return new Promise((resolve, reject) => {
-      db.query('INSERT INTO reviews SET ?', review, (err, result) => {
-        if (err) {
-          return reject(err);
-        }
-        resolve(result.insertId);
-      });
-    });
+  create: async (review) => {
+    const [result] = await db.execute(
+      'INSERT INTO reviews (product_id, user_id, rating, comment) VALUES (?, ?, ?, ?)',
+      [review.product_id, review.user_id, review.rating, review.comment]
+    );
+    return result.insertId;
   },
-  findByProductId: (productId) => {
-    return new Promise((resolve, reject) => {
-      db.query('SELECT * FROM reviews WHERE product_id = ?', [productId], (err, results) => {
-        if (err) {
-          return reject(err);
-        }
-        resolve(results);
-      });
-    });
-  },
+  findByProductId: async (productId) => {
+    const [rows] = await db.execute('SELECT * FROM reviews WHERE product_id = ?', [productId]);
+    return rows;
+  }
 };
 
 export default Review;
