@@ -1,12 +1,17 @@
 import express from 'express';
+import bodyParser from 'body-parser';
+import productRoutes from './src/routes/productRoutes.js';
+import userRoutes from './src/routes/userRoutes.js';
+import reviewRoutes from './src/routes/reviewRoutes.js';
+
 const app = express();
+const port = 3000;
 
-app.get('/', (req, res) => {
-  const name = process.env.NAME || 'World';
-  res.send(`Hello ${name}!`);
-});
+app.use(bodyParser.json());
+app.use('/products', productRoutes);
+app.use('/users', userRoutes);
+app.use('/reviews', reviewRoutes);
 
-const port = parseInt(process.env.PORT) || 3000;
 app.listen(port, () => {
-  console.log(`listening on port ${port}`);
-});
+  console.log(`Server listening at http://localhost:${port}`)
+})
